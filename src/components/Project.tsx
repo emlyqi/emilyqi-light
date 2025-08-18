@@ -60,7 +60,7 @@ const Project = (props: Props) => {
                     <p className="subtext" style={{ margin: 0 }}>{props.skills.map(skill => skill).join(' - ')}</p>
                     <p style={{ marginTop: '0.75rem', marginBottom: 0 }}>{props.description}</p>
                     {props.image && 
-                        <div style={{ marginTop: '1.5rem', marginBottom: '0.25rem', borderRadius: '10px', outline: 'solid 1px #e2e2e2', width: '55%', height: 'auto', overflow: 'hidden' }}>
+                        <div style={{ marginTop: '1.5rem', marginBottom: '0.25rem', borderRadius: '10px', outline: 'solid 1px #e2e2e2', width: '55%', maxHeight: '14rem', overflow: 'hidden' }}>
                             <img src={props.image} style={{ width: '100%', height: 'auto', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
                         </div>
                     }
