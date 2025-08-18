@@ -33,7 +33,9 @@ const Navbar = () => {
                     <a href="mailto:emily.qi@uwaterloo.ca" className="subtext" style={{ margin: 0 }}>emily.qi@uwaterloo.ca</a>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', alignItems: 'center' }}>
-                    <p>old site</p>
+                    <a href="https://emilyqi.pages.dev/" target="_blank" rel="noopener noreferrer">
+                        <p>old site</p>
+                    </a>
                     <a href="/Emily Qi Resume.pdf" target="_blank" rel="noopener noreferrer">
                         <p>resume</p>
                     </a>
