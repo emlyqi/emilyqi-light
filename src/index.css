@@ -75,6 +75,10 @@ a {
   text-decoration: none;
 }
 
+.a-underline {
+  text-decoration: underline;
+}
+
 .subtext {
   font-size: 1rem;
 }
