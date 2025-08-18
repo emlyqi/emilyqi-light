@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const Convergence = (props: Props) => {
+const Convergence = () => {
   return (
     <div>Convergence</div>
   )

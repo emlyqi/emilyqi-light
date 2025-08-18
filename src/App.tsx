@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Navbar from './sections/Navbar.tsx'
 import About from './sections/About.tsx'
 import Projects from './sections/Projects.tsx'

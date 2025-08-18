@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import GitHubIcon from '../assets/sm-icons/github.svg'
 import XIcon from '../assets/sm-icons/x.svg'
 import LinkedInIcon from '../assets/sm-icons/linkedin.svg'
 
-type Props = {}
-
-const Navbar = (props: Props) => {
+const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {

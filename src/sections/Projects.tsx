@@ -1,12 +1,11 @@
-import React from 'react'
+import { useState } from 'react'
 import Dropdown from '../components/Dropdown'
 import Project from '../components/Project'
 import ProjectsList from '../data/ProjectsList'
 
-type Props = {}
 
-const Projects = (props: Props) => {
-    const [filter, setFilter] = React.useState('all');
+const Projects = () => {
+    const [filter, setFilter] = useState('all');
 
     return (
         <div style={{ marginBottom: '2rem' }}>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 type Props = {
     bullet: string;
     title: string;

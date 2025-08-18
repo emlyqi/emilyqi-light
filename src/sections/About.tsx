@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const About = (props: Props) => {
+const About = () => {
   return (
     <div style={{ margin: '12rem 0' }}>
       <p>Hey! I'm currently studying CS and Finance @ uWaterloo.</p>
