@@ -2,8 +2,26 @@ import VisionPrepPath from '../assets/projects/visionprep.png'
 import ConvergencePath from '../assets/projects/convergence.jpg'
 import LunarHacksPath from '../assets/projects/lunarhacks.png'
 import AgriPlantPath from '../assets/projects/agriplant.png'
+import BrewPath from '../assets/projects/brew.png'
+import OldSitePath from '../assets/projects/emilyqi_neu.png'
 
 const ProjectsList = [
+    {
+        type: 'software',
+        title: 'Brew',
+        link: 'https://github.com/emlyqi/brew',
+        skills: ['python', 'numpy', 'openai', 'scikit-learn', 'fastapi', 'node.js', 'axios', 'react', 'javascript'],
+        description: 'semantically searches for potential people to coffee chat',
+        image: BrewPath
+    },
+    {
+        type: 'software',
+        title: 'Old Personal Website',
+        link: 'https://github.com/emlyqi/brew',
+        skills: ['react', 'typescript', 'tailwind css', 'framer motion', 'figma'],
+        description: 'i think this old one is a little more visually interesting',
+        image: OldSitePath
+    },
     {
         type: 'software',
         title: 'Market-Matching Robo-Advisor',
