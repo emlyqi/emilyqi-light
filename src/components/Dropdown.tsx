@@ -39,16 +39,17 @@ const Dropdown: React.FC<DropdownProps> = ({ options, defaultOption = 'all', onS
                         position: 'absolute',
                         top: '100%',
                         left: 0,
-                        backgroundColor: 'rgba(58, 63, 73, 0.1)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        border: '1px solid #ccc',
+                        backgroundColor: 'rgba(58, 63, 73, 0.18)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        border: '1px solid #3A3F49',
                         padding: '0.25rem 0',
                         margin: 0,
                         listStyle: 'none',
                         minWidth: '100%',
                         borderRadius: '10px',
-                        outline: 'solid 1px #e2e2e2',
+                        overflow: 'hidden',
+                        outline: '1px solid #e2e2e2',
                         zIndex: 800,
                     }}
                     >
@@ -57,12 +58,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, defaultOption = 'all', onS
                             key={option}
                             onClick={() => handleSelect(option)}
                             style={{
-                                padding: '0.25rem 1rem',
+                                padding: '0.45rem 1rem',
                                 cursor: 'pointer',
                                 transition: 'background 0.2s'
                             }}
-                            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
-                            onMouseLeave={(e) => (e.currentTarget.style.background = '#3A3F49')}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                         >
                             {option}
                         </li>

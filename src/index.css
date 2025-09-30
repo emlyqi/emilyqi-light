@@ -19,12 +19,38 @@ body {
   min-height: 100vh;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 .navbar-wrapper {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+  background: linear-gradient(
+    to bottom,
+    rgba(58, 63, 73, 0.25) 0%,
+    rgba(58, 63, 73, 0.0) 100%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Subtle blurred bottom edge for smoother transition */
+.navbar-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -22px;
+  height: 44px;
+  background: linear-gradient(to bottom, rgba(58, 63, 73, 0.3), rgba(58, 63, 73, 0));
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .navbar-wrapper.scrolled {
@@ -37,23 +63,73 @@ body {
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* compensate for fixed navbar height */
+body {
+  padding-top: 4.5rem;
+}
+
 .navbar {
-  width: 90%;
+  width: 86%;
   margin: 0 auto;
   padding: 1.5rem 0;
   display: flex;
   justify-content: space-between;
 }
 
+/* Keep social icons at a consistent size */
+.navbar img {
+  width: 1.8rem;
+  height: auto;
+  display: block;
+}
+
 .main-content {
-  width: 80%;
+  width: 68%;
   margin: 2rem auto;
 }
 
 .footer {
-  width: 80%;
+  width: 68%;
   margin: 0 auto;
   padding: 2rem 0;
+}
+
+/* Mobile banner (hidden on desktop) */
+.mobile-banner {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-banner {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    margin: 0.75rem auto 0.75rem;
+    color: #e2e2e2;
+    background: rgba(58, 63, 73, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(226, 226, 226, 0.35);
+    border-bottom: 1px solid rgba(226, 226, 226, 0.35);
+    text-align: center;
+    font-size: 0.95rem;
+    position: relative;
+  }
+
+  .mobile-banner__close {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e2e2e2;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0.25rem;
+    cursor: pointer;
+  }
 }
 
 h1 {
@@ -99,4 +175,142 @@ button {
   border-radius: 10px;
   padding: 0.5rem 1rem;
   cursor: pointer;
+}
+
+/* responsive adjustments */
+@media (max-width: 1024px) {
+  .navbar {
+    width: 86%;
+  }
+
+  .main-content,
+  .footer {
+    width: 78%;
+  }
+
+  .navbar img {
+    width: 1.6rem;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  p,
+  li {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .navbar a {
+    width: auto !important;
+  }
+
+  .navbar img {
+    width: 1.5rem;
+  }
+
+  .main-content,
+  .footer {
+    width: 86%;
+    margin: 1.5rem auto;
+  }
+
+  .subtext {
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  p,
+  li {
+    font-size: 1rem;
+  }
+
+  .main-content ul {
+    padding-left: 0;
+  }
+
+  .main-content li {
+    width: 100% !important;
+    padding: 0.5rem 1rem 1.25rem !important;
+  }
+
+  div[style*="outline: solid 1px #e2e2e2"] {
+    width: 100% !important;
+    max-height: none !important;
+  }
+
+  .main-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    gap: 0.5rem;
+  }
+
+  .navbar a {
+    width: auto !important;
+  }
+
+  .navbar img {
+    width: 1.35rem;
+  }
+
+  .main-content {
+    margin: 1rem auto;
+  }
+
+  h1 {
+    font-size: 1.15rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  p,
+  li {
+    font-size: 0.95rem;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content > div:first-child ul li {
+    line-height: 1.2;
+    margin: 0.05rem 0;
+  }
+  .main-content > div:first-child ul {
+    margin: 0.1rem 0;
+  }
 }

@@ -17,7 +17,7 @@ const ProjectsList = [
     {
         type: 'software',
         title: 'Old Personal Website',
-        link: 'https://github.com/emlyqi/brew',
+        link: 'https://emilyqi.pages.dev/',
         skills: ['react', 'typescript', 'tailwind css', 'framer motion', 'figma'],
         description: 'i think this old one is a little more visually interesting',
         image: OldSitePath

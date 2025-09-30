@@ -34,7 +34,7 @@ const Navbar = () => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', alignItems: 'center' }}>
                     <a href="https://emilyqi.pages.dev/" target="_blank" rel="noopener noreferrer">
-                        <p>old site</p>
+                        <p>old</p>
                     </a>
                     <a href="/Emily Qi Resume.pdf" target="_blank" rel="noopener noreferrer">
                         <p>resume</p>
