@@ -5,7 +5,7 @@ import Projects from './sections/Projects.tsx'
 import Footer from './sections/Footer.tsx'
 
 function App() {
-  const [showMobileBanner, setShowMobileBanner] = useState(true)
+  const [showMobileBanner, setShowMobileBanner] = useState(false)
   return (
     <>
       <Navbar />

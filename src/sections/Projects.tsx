@@ -9,14 +9,14 @@ const Projects = () => {
 
     return (
         <div style={{ marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '2rem', alignItems: 'baseline' }}>
                 <h1>Projects</h1>
                 <Dropdown 
                     options={['all', 'software', 'whimsy']}
                     onSelect={(value) => setFilter(value)}
                 />
             </div>
-            <ul style={{ marginTop: 0 }}>
+            <div className="projects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem 2rem', marginTop: 0 }}>
                 {ProjectsList
                     .filter((project) => filter === 'all' || project.type === filter)
                     .map((project, index) => (
@@ -32,7 +32,7 @@ const Projects = () => {
                         />
                     ))
                 }
-            </ul>
+            </div>
         </div>
     )
 }
