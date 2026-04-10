@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import GitHubIcon from '../assets/sm-icons/github.svg'
 import XIcon from '../assets/sm-icons/x.svg'
 import LinkedInIcon from '../assets/sm-icons/linkedin.svg'
@@ -17,7 +18,7 @@ const Navbar = () => {
             <div className="navbar" style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: 0 }}>
-                        <h1 style={{ margin: 0 }}>Emily Qi</h1>
+                        <Link to="/" style={{ textDecoration: 'none' }}><h1 style={{ margin: 0 }}>Emily Qi</h1></Link>
                         <div style={{ display: 'flex', gap: '0.2rem' }}>
                             <a href="https://github.com/emlyqi/" target="_blank" rel="noopener noreferrer" style={{ margin: 0, width: '2.3rem', lineHeight: 0 }}>
                                 <img src={GitHubIcon} alt="GitHub" />
@@ -33,6 +34,7 @@ const Navbar = () => {
                     <a href="mailto:emilyhlqi@gmail.com" className="subtext" style={{ margin: 0 }}>emilyhlqi@gmail.com</a>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1.5rem', alignItems: 'center' }}>
+                    {/* <Link to="/fun"><p>fun</p></Link> */}
                     {/* <a href="https://emilyqi.pages.dev/" target="_blank" rel="noopener noreferrer">
                         <p>old</p>
                     </a>

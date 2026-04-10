@@ -1,8 +1,19 @@
 import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Navbar from './sections/Navbar.tsx'
 import About from './sections/About.tsx'
 import Projects from './sections/Projects.tsx'
+import Fun from './sections/Fun.tsx'
 import Footer from './sections/Footer.tsx'
+
+function Home() {
+  return (
+    <>
+      <About />
+      <Projects />
+    </>
+  )
+}
 
 function App() {
   const [showMobileBanner, setShowMobileBanner] = useState(false)
@@ -16,8 +27,10 @@ function App() {
         </div>
       )}
       <main className="main-content">
-        <About />
-        <Projects />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/fun" element={<Fun />} />
+        </Routes>
       </main>
       <Footer />
     </>

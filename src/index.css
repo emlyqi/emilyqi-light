@@ -16,7 +16,6 @@
 
 body {
   margin: 0 auto;
-  min-height: 100vh;
 }
 
 html, body {
@@ -83,9 +82,16 @@ body {
   display: block;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 4.5rem);
+}
+
 .main-content {
   width: 68%;
   margin: 2rem auto;
+  flex: 1;
 }
 
 .footer {
@@ -152,6 +158,10 @@ a {
 }
 
 .a-underline {
+  text-decoration: underline;
+}
+
+.fun-page a {
   text-decoration: underline;
 }
 
