@@ -7,14 +7,16 @@ import OldSitePath from '../assets/projects/emilyqi_neu.png'
 import KaryonPath from '../assets/projects/karyon.png'
 import BreakoutDQNPath from '../assets/projects/breakout_dqn.png'
 import SynSpeedrunPath from '../assets/projects/syn_speedrun.png'
+import DepthBenchmarkPath from '../assets/projects/depth_benchmark.png'
 
 const ProjectsList = [
     {
         type: 'software',
-        title: 'Depth Benchmarking',
-        link: '',
-        skills: ['opencv', 'pytorch', 'midas'],
-        description: 'coming very soon! study on depth comparison with stereo vs neural depth',
+        title: 'Depth Estimation Benchmark',
+        link: 'https://github.com/emlyqi/depth_benchmarking',
+        skills: ['python', 'pytorch', 'opencv', 'hugging face', 'onnx', 'numpy'],
+        description: 'benchmarked stereo vs neural depth estimation, fine-tuned dpt-large, and wrote 6000 words about it',
+        image: DepthBenchmarkPath
     },
     {
         type: 'software',
