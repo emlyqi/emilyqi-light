@@ -13,7 +13,7 @@ const ProjectsList = [
     {
         type: 'software',
         title: 'Depth Estimation Benchmark',
-        link: 'https://github.com/emlyqi/depth_benchmarking',
+        link: 'https://github.com/emlyqi/depth-benchmarking',
         skills: ['python', 'pytorch', 'opencv', 'hugging face', 'onnx', 'numpy'],
         description: 'benchmarked stereo vs neural depth estimation, fine-tuned dpt-large, and wrote 6000 words about it',
         image: DepthBenchmarkPath
