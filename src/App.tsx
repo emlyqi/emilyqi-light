@@ -4,7 +4,7 @@ import Navbar from './sections/Navbar.tsx'
 import About from './sections/About.tsx'
 import Projects from './sections/Projects.tsx'
 import Fun from './sections/Fun.tsx'
-import DepthBenchmarking from './sections/DepthBenchmarking.tsx'
+import DepthBenchmarking from './project_pages/DepthBenchmarking.tsx'
 import Footer from './sections/Footer.tsx'
 
 function Home() {
