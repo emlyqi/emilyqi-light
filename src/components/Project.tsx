@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {
     bullet: string;
@@ -32,6 +33,7 @@ const ExternalLinkIcon = () => (
 )
 
 const Project = (props: Props) => {
+    const navigate = useNavigate()
     const [expanded, setExpanded] = useState(false)
     const [imgHovered, setImgHovered] = useState(false)
 
@@ -54,10 +56,10 @@ const Project = (props: Props) => {
                     listStyle: 'none',
                     marginBottom: '0.25rem',
                     borderRadius: '18px',
-                    padding: '0.5rem 1.5rem 2rem',
+                    padding: '0.5rem 1rem 2rem',
                 }}
                 onClick={() => {
-                    if (props.projectPage) window.open(props.projectPage, '_blank')
+                    if (props.projectPage) navigate(props.projectPage)
                 }}
                 onMouseEnter={(e) => {
                     if (props.projectPage) Object.assign(e.currentTarget.style, hoverStyle)

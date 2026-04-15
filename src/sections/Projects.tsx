@@ -16,7 +16,7 @@ const Projects = () => {
                     onSelect={(value) => setFilter(value)}
                 />
             </div>
-            <div className="projects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem 2rem', marginTop: 0 }}>
+            <div className="projects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem 2rem', marginTop: '0.5rem' }}>
                 {ProjectsList
                     .filter((project) => filter === 'all' || project.type === filter)
                     .map((project, index) => (
@@ -28,7 +28,7 @@ const Projects = () => {
                             skills={project.skills}
                             description={project.description}
                             image={project.image}
-                            // projectPage={project.projectPage}
+                            projectPage={project.projectPage}
                         />
                     ))
                 }
