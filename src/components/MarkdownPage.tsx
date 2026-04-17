@@ -4,27 +4,36 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 
-const ProjectPage = () => {
+type Props = {
+  folder: string
+  backTo?: string
+}
+
+const MarkdownPage = ({ folder, backTo = '/' }: Props) => {
   const { slug } = useParams()
   const [content, setContent] = useState<string | null>(null)
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch(`/project_pages/${slug}.md`)
+    setContent(null)
+    setError(false)
+    fetch(`/${folder}/${slug}.md`)
       .then(res => {
         if (!res.ok) throw new Error('Not found')
+        const contentType = res.headers.get('content-type') || ''
+        if (contentType.includes('text/html')) throw new Error('Not found')
         return res.text()
       })
       .then(setContent)
       .catch(() => setError(true))
-  }, [slug])
+  }, [folder, slug])
 
-  if (error) return <div style={{ margin: '4rem 0' }}>page not found</div>
+  if (error) return <div style={{ margin: '4rem 0' }}><p>404 this page doesn't exist — <Link to="/" style={{ textDecoration: 'underline' }}>take me home!</Link></p></div>
   if (!content) return <div style={{ margin: '4rem 0' }}>loading...</div>
 
   return (
     <div className="markdown" style={{ margin: '4rem 0' }}>
-      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '2rem' }}>
+      <Link to={backTo} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '2rem' }}>
         ← back
       </Link>
       <ReactMarkdown
@@ -37,4 +46,4 @@ const ProjectPage = () => {
   )
 }
 
-export default ProjectPage
+export default MarkdownPage

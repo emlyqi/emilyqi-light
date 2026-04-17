@@ -54,7 +54,7 @@ const ProjectsList = [
     {
         type: 'whimsy',
         title: 'Convergence',
-        link: 'https://x.com/emlyqi/status/1954728432451121337',
+        link: 'https://www.youtube.com/watch?v=Gq2RE4Vaz28',
         skills: ['project management', 'figma'],
         description: '50-person game of tag played on uWaterloo campus and in downtown Toronto',
         image: ConvergencePath,

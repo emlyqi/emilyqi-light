@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import Navbar from './sections/Navbar.tsx'
 import About from './sections/About.tsx'
 import Projects from './sections/Projects.tsx'
-import Fun from './sections/Fun.tsx'
-import ProjectPage from './components/ProjectPage.tsx'
+import MarkdownPage from './components/MarkdownPage.tsx'
+import WordsIndex from './sections/WordsIndex.tsx'
 import Footer from './sections/Footer.tsx'
 
 function Home() {
@@ -37,8 +37,10 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/fun" element={<Fun />} />
-          <Route path="/p/:slug" element={<ProjectPage />} />
+          <Route path="/p/:slug" element={<MarkdownPage folder="project_pages" />} />
+          <Route path="/w" element={<WordsIndex />} />
+          <Route path="/w/:slug" element={<MarkdownPage folder="words" backTo="/w" />} />
+          <Route path="*" element={<div style={{ margin: '4rem 0' }}><p>404 this page doesn't exist — <Link to="/" style={{ textDecoration: 'underline' }}>take me home!</Link></p></div>} />
         </Routes>
       </main>
       <Footer />
