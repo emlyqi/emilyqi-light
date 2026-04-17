@@ -1,9 +1,3 @@
-import { Link } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-
-const content = `
 # Depth Estimation Benchmark: Stereo vs Neural Methods
 
 GitHub: https://github.com/emlyqi/depth-benchmarking/
@@ -31,7 +25,7 @@ Methods compared:
 I used [KITTI Stereo 2015](https://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo), which contains 200 training scenes captured from a moving vehicle in Karlsruhe, Germany. Each scene provides a synchronized stereo image pair from two calibrated cameras, plus sparse ground truth (GT) depth from a Velodyne LiDAR scanner.
 
 **Folder structure:**
-\`\`\`
+```
 data_scene_flow/
 ├── training/
 │   ├── image_2/          - left camera images (000000_10.png format)
@@ -40,25 +34,25 @@ data_scene_flow/
 └── data_scene_flow_calib/
     └── training/
         └── calib_cam_to_cam/
-\`\`\`
+```
 
-Files follow the naming convention \`XXXXXX_10.png\` for reference frames. I only used the \`_10\` reference frames, not the \`_11\` next-frame files because depth estimation requires only a synchronized left/right pair at one moment in time, not consecutive frames.
+Files follow the naming convention `XXXXXX_10.png` for reference frames. I only used the `_10` reference frames, not the `_11` next-frame files because depth estimation requires only a synchronized left/right pair at one moment in time, not consecutive frames.
 
-**Fixed-point encoding**: GT disparity is stored as uint16 PNG. Dividing by 256 gives real disparity in pixels, where KITTI multiplied by 256 before saving to preserve sub-pixel precision in integer storage. Zero values indicate no GT at that pixel. This is worth distinguishing from OpenCV's stereo output which uses a scale factor of 16 - \`compute()\` returns fixed-point integers where real disparity is the value divided by 16.
+**Fixed-point encoding**: GT disparity is stored as uint16 PNG. Dividing by 256 gives real disparity in pixels, where KITTI multiplied by 256 before saving to preserve sub-pixel precision in integer storage. Zero values indicate no GT at that pixel. This is worth distinguishing from OpenCV's stereo output which uses a scale factor of 16 - `compute()` returns fixed-point integers where real disparity is the value divided by 16.
 
 **GT sparsity**: There are only around 88,000 valid pixels per image out of 465,750 total (roughly 19% coverage). The LiDAR physically cannot hit the sky, so the upper ~40% of every GT depth map is always empty. Valid pixels are also biased toward close objects since nearby surfaces return stronger LiDAR signals; the GT median is around 10m even though scenes extend to 80m. This sparsity had numerous downstream consequences for both scale alignment and fine-tuning, discussed in sections 4.5 and 7.6.
 
-**Calibration**: I read camera intrinsics from the \`P_rect_00\` projection matrix:
-- \`f = P0[0,0]\` = 721.54px
-- \`cx = P0[0,2]\` = 609.56, \`cy = P0[1,2]\` = 172.85
-- \`B = -P1[0,3] / P1[0,0]\` = 0.537m, derived from the right camera matrix since \`P1[0,3] = -f*B\`
+**Calibration**: I read camera intrinsics from the `P_rect_00` projection matrix:
+- `f = P0[0,0]` = 721.54px
+- `cx = P0[0,2]` = 609.56, `cy = P0[1,2]` = 172.85
+- `B = -P1[0,3] / P1[0,0]` = 0.537m, derived from the right camera matrix since `P1[0,3] = -f*B`
 
 I verified f and B are consistent across all 200 scenes by reading every calibration file, so a single file was used throughout.
 
 **Depth from disparity**:
-\`\`\`
+```
 Z = f * B / disparity
-\`\`\`
+```
 
 Depths beyond 80m and zero/negative disparities are set to NaN.
 
@@ -78,42 +72,42 @@ StereoBM (Block Matching) is the simpler of the two methods. For each pixel in t
 
 I tuned parameters starting from OpenCV defaults. The main decisions:
 
-\`numDisparities=128\` controls the search range. At f=721.54 and B=0.537, this covers depths from f*B/128 = 3m up to the 80m clip. I experimented with numDisparities=192 to handle closer objects but found that 128 was sufficient for KITTI's scenes.
+`numDisparities=128` controls the search range. At f=721.54 and B=0.537, this covers depths from f*B/128 = 3m up to the 80m clip. I experimented with numDisparities=192 to handle closer objects but found that 128 was sufficient for KITTI's scenes.
 
-\`blockSize=11\` represents the matching window size. Smaller values (tried blockSize=5) produce noisy results with too many artifacts. Larger values (tried 15) over-smooth and lose edge detail. 11 achieved a good balance between noise and boundary sharpness.
+`blockSize=11` represents the matching window size. Smaller values (tried blockSize=5) produce noisy results with too many artifacts. Larger values (tried 15) over-smooth and lose edge detail. 11 achieved a good balance between noise and boundary sharpness.
 
-\`uniquenessRatio=5\` indicates that the best match must score at least 5% better than the second best, otherwise the pixel is rejected as ambiguous. The OpenCV default of 10 was too strict for KITTI, leaving too many invalid pixels in valid regions. 5 keeps more matches at the cost of some ambiguous pixels, which are cleaned up by the speckle filter.
+`uniquenessRatio=5` indicates that the best match must score at least 5% better than the second best, otherwise the pixel is rejected as ambiguous. The OpenCV default of 10 was too strict for KITTI, leaving too many invalid pixels in valid regions. 5 keeps more matches at the cost of some ambiguous pixels, which are cleaned up by the speckle filter.
 
-\`speckleWindowSize=80\` removes isolated blobs of valid pixels smaller than this threshold after matching - these are typically noise from false matches rather than real surfaces. Values below 50 still left noise, while values above 100 started removing real detail, so I decided on 80 as the sweet spot.
+`speckleWindowSize=80` removes isolated blobs of valid pixels smaller than this threshold after matching - these are typically noise from false matches rather than real surfaces. Values below 50 still left noise, while values above 100 started removing real detail, so I decided on 80 as the sweet spot.
 
-\`speckleRange=32\` sets that pixels within 32 disparity units of each other are grouped as the same blob for speckle filtering.
+`speckleRange=32` sets that pixels within 32 disparity units of each other are grouped as the same blob for speckle filtering.
 
-\`minDisparity=0\` sets the search to start from zero shift.
+`minDisparity=0` sets the search to start from zero shift.
 
 ### 3.2 StereoSGBM
 
 StereoSGBM (Semi-Global Block Matching) adds a global smoothness constraint on top of block matching. After computing per-pixel matching costs, it aggregates costs along multiple directions with penalties for large disparity jumps between neighboring pixels. This encourages the disparity map to be smooth except at real object boundaries.
 
-The P1 and P2 parameters control this smoothness. P1 penalizes disparity changes of 1 between neighbors; P2 penalizes larger jumps. I used the standard OpenCV formula: \`P1 = 8 * 3 * blockSize^2\` and \`P2 = 32 * 3 * blockSize^2\`, giving P1=2904 and P2=11616 with blockSize=11. The P2/P1 ratio of 4 enforces smoothness without over-smoothing real depth edges.
+The P1 and P2 parameters control this smoothness. P1 penalizes disparity changes of 1 between neighbors; P2 penalizes larger jumps. I used the standard OpenCV formula: `P1 = 8 * 3 * blockSize^2` and `P2 = 32 * 3 * blockSize^2`, giving P1=2904 and P2=11616 with blockSize=11. The P2/P1 ratio of 4 enforces smoothness without over-smoothing real depth edges.
 
-\`mode=STEREO_SGBM_MODE_SGBM_3WAY\` uses a more accurate cost aggregation scheme than the default SGBM mode. Switching to 3WAY reduced horizontal streaking artifacts visible in early results and improved edge preservation overall.
+`mode=STEREO_SGBM_MODE_SGBM_3WAY` uses a more accurate cost aggregation scheme than the default SGBM mode. Switching to 3WAY reduced horizontal streaking artifacts visible in early results and improved edge preservation overall.
 
-\`disp12MaxDiff=1\` runs a left-right consistency check - disparity is computed in both directions and pixels where results disagree by more than 1 are rejected. This catches occlusions and unreliable matches.
+`disp12MaxDiff=1` runs a left-right consistency check - disparity is computed in both directions and pixels where results disagree by more than 1 are rejected. This catches occlusions and unreliable matches.
 
 All other parameters (uniquenessRatio, speckleWindowSize, speckleRange) use the same values and rationale as BM.
 
 ### 3.3 Disparity to depth conversion
 
-\`\`\`python
+```python
 def disp_to_depth(disp, f, B):
     with np.errstate(divide='ignore', invalid='ignore'):
         depth = f * B / disp
         depth[depth <= 0] = np.nan
         depth[depth > 80] = np.nan
     return depth
-\`\`\`
+```
 
-\`np.errstate\` suppresses divide-by-zero warnings since NaN handling is done explicitly on the next lines.
+`np.errstate` suppresses divide-by-zero warnings since NaN handling is done explicitly on the next lines.
 
 ### 3.4 Stereo failure modes
 
@@ -151,7 +145,7 @@ I included MiDaS small as a lightweight baseline to understand the accuracy trad
 
 DPT-Large uses a Vision Transformer (ViT) backbone. Rather than processing through convolutional layers, ViT splits the image into 16x16 pixel patches and processes all 576 patches (for 384x384 input) simultaneously through transformer layers, where each patch attends to every other patch. This gives the model global context from the start, which is why it handles depth cues that depend on whole-scene context better than CNNs.
 
-I loaded it via \`torch.hub.load("intel-isl/MiDaS", "DPT_Large")\` with the corresponding \`dpt_transform\`, which resizes to 384x384 and normalizes with ImageNet statistics (\`mean=[0.485, 0.456, 0.406]\`, \`std=[0.229, 0.224, 0.225]\`). These normalization values match the model's pretraining and need to be preserved during fine-tuning as well.
+I loaded it via `torch.hub.load("intel-isl/MiDaS", "DPT_Large")` with the corresponding `dpt_transform`, which resizes to 384x384 and normalizes with ImageNet statistics (`mean=[0.485, 0.456, 0.406]`, `std=[0.229, 0.224, 0.225]`). These normalization values match the model's pretraining and need to be preserved during fine-tuning as well.
 
 <img src="/depth_benchmarking/assets/midas_comparison.png" width="800">
 
@@ -159,17 +153,17 @@ I loaded it via \`torch.hub.load("intel-isl/MiDaS", "DPT_Large")\` with the corr
 
 ### 4.3 DepthAnything V2 Small
 
-DepthAnything V2 is a newer model (2024) trained on a much larger and more diverse dataset than MiDaS. I loaded it through HuggingFace's \`pipeline\` interface. Despite being the Small variant, it outperforms pretrained DPT-Large on all metrics. Better training data and architectural improvements outweigh the size difference.
+DepthAnything V2 is a newer model (2024) trained on a much larger and more diverse dataset than MiDaS. I loaded it through HuggingFace's `pipeline` interface. Despite being the Small variant, it outperforms pretrained DPT-Large on all metrics. Better training data and architectural improvements outweigh the size difference.
 
 ### 4.4 Inverse depth
 
 Both DPT-Large and DepthAnything output inverse depth, not depth. High values mean close to the camera, while low values mean far away. This is the opposite of metric depth and needs to be handled before alignment or evaluation:
 
-\`\`\`python
+```python
 depth = prediction.cpu().numpy()
 depth = np.clip(depth, 1e-3, None)
 depth = 1.0 / (depth + 1e-8)
-\`\`\`
+```
 
 The clip before inversion matters - near-zero raw values produce extremely large inverted values that break scale alignment. DepthAnything also has negative and near-zero values in its raw output from floating point noise, so clipping to 0.1 before inverting handles those cleanly.
 
@@ -181,14 +175,14 @@ The clip before inversion matters - near-zero raw values produce extremely large
 
 Since pretrained models output relative depth in arbitrary units, I aligned them to metric scale before computing metrics using median scale alignment, which is the standard approach in depth estimation literature:
 
-\`\`\`python
+```python
 def median_scale_align(pred, gt):
     mask = (gt > 0) & np.isfinite(gt) & np.isfinite(pred) & (pred > 0)
     scale = np.median(gt[mask]) / np.median(pred[mask])
     aligned = pred * scale
     aligned = np.clip(aligned, 0, 80)
     return aligned
-\`\`\`
+```
 
 The median predicted depth is scaled to match the median GT depth, giving a single global scale factor. Median is used rather than mean because it's robust to outliers.
 
@@ -198,16 +192,16 @@ The main challenge was KITTI's sparse GT bias. The GT median is around 10m even 
 
 After running the model, the output is interpolated back to the original image size since DPT internally processes at 384x384:
 
-\`\`\`python
+```python
 prediction = torch.nn.functional.interpolate(
     prediction.unsqueeze(1),
     size=img_rgb.shape[:2],
     mode='bicubic',
     align_corners=False
 )
-\`\`\`
+```
 
-\`unsqueeze(1)\` adds a channel dimension because interpolate expects 4D input. \`squeeze()\` removes it after. \`torch.no_grad()\` is used throughout inference since gradients aren't needed.
+`unsqueeze(1)` adds a channel dimension because interpolate expects 4D input. `squeeze()` removes it after. `torch.no_grad()` is used throughout inference since gradients aren't needed.
 
 <img src="/depth_benchmarking/assets/depth_comparison_scene0.png" width="800">
 
@@ -290,7 +284,7 @@ I chose not to fine-tune DepthAnything V2 even though it was the stronger pretra
 
 ### 7.2 Dataset class
 
-\`\`\`python
+```python
 class KITTIDepthDataset(Dataset):
     def __getitem__(self, idx):
         left_path, _, disp_path = self.triplets[idx]
@@ -308,22 +302,22 @@ class KITTIDepthDataset(Dataset):
             img = self.transform(img)
 
         return img, torch.tensor(depth_gt, dtype=torch.float32)
-\`\`\`
+```
 
-GT depth is resized to 384x384 using \`INTER_NEAREST\` rather than bicubic. The GT is sparse; numerically, it's mostly zeros with valid values scattered around. Bicubic interpolation would average valid depth pixels with surrounding zeros, creating fake intermediate values at invalid pixel locations. Nearest-neighbour preserves the sparse structure by copying the closest valid pixel.
+GT depth is resized to 384x384 using `INTER_NEAREST` rather than bicubic. The GT is sparse; numerically, it's mostly zeros with valid values scattered around. Bicubic interpolation would average valid depth pixels with surrounding zeros, creating fake intermediate values at invalid pixel locations. Nearest-neighbour preserves the sparse structure by copying the closest valid pixel.
 
-NaN values are replaced with 0 before resizing since NaN arithmetic would corrupt the resize. The training loss uses \`mask = depths > 0\` to ignore these zero pixels so they never contribute to gradient updates.
+NaN values are replaced with 0 before resizing since NaN arithmetic would corrupt the resize. The training loss uses `mask = depths > 0` to ignore these zero pixels so they never contribute to gradient updates.
 
-The pretrained \`dpt_transform\` adds a batch dimension internally, which conflicts with DataLoader's own batching. I wrote a custom transform that returns a clean (3, 384, 384) tensor instead:
+The pretrained `dpt_transform` adds a batch dimension internally, which conflicts with DataLoader's own batching. I wrote a custom transform that returns a clean (3, 384, 384) tensor instead:
 
-\`\`\`python
+```python
 train_transform = T.Compose([
     T.ToPILImage(),
     T.Resize((384, 384)),
     T.ToTensor(),
     T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
-\`\`\`
+```
 
 The normalization values match DPT-Large's pretraining statistics.
 
@@ -331,7 +325,7 @@ The normalization values match DPT-Large's pretraining statistics.
 
 The key parts of the training loop:
 
-\`\`\`python
+```python
 pred = model(imgs)
 if pred.dim() == 3:
     pred = pred.unsqueeze(1)
@@ -346,7 +340,7 @@ loss = criterion(pred[mask], depths[mask])
 optimizer.zero_grad()
 loss.backward()
 optimizer.step()
-\`\`\`
+```
 
 Loss is computed only on valid GT pixels using the mask. I logged training and validation loss plus validation AbsRel to W&B every epoch, and saved a checkpoint whenever validation loss improved. In hindsight, AbsRel would probably have been a more meaningful metric, but in practice, they tracked closely enough that the best loss checkpoint also had the best AbsRel.
 
@@ -354,7 +348,7 @@ Loss is computed only on valid GT pixels using the mask. I logged training and v
 
 Training ran across multiple Kaggle sessions. Results varied between runs - best val_absrel ranged from 0.109 to 0.097 - which is expected with only 160 training images (small dataset effect) and non-determinism in GPU batch ordering even with a fixed random seed. The model can converge to different local optima depending on which examples it sees first.
 
-An important operational lesson here was checkpoint management. Re-running the notebook with the same \`SAVE_PATH\` overwrites the previous checkpoint, meaning a better run can be lost to a worse one. The fix was to call \`wandb.save(SAVE_PATH)\` immediately after \`torch.save()\` to upload checkpoints to W&B cloud before the Kaggle session ended.
+An important operational lesson here was checkpoint management. Re-running the notebook with the same `SAVE_PATH` overwrites the previous checkpoint, meaning a better run can be lost to a worse one. The fix was to call `wandb.save(SAVE_PATH)` immediately after `torch.save()` to upload checkpoints to W&B cloud before the Kaggle session ended.
 
 The final checkpoint had val_absrel 0.097 during training and 0.103 on the full 200-image evaluation. This difference was expected - training AbsRel was computed on 40 val images during the forward pass, while final evaluation used the full inference pipeline on all 200 scenes.
 
@@ -376,8 +370,8 @@ Loss decreased consistently through epoch 5, plateaued around epochs 6-8, then i
 
 The pretrained model outputs inverse depth and needs median scale alignment. The fine-tuned model outputs metric depth directly and needs neither inversion nor alignment because training against metric GT in meters taught the model to output meters. These require separate inference functions:
 
-- \`run_midas()\` - for pretrained: inverts raw output, then applies median scale alignment
-- \`run_midas_finetuned()\` - for fine-tuned: uses raw output directly, no inversion or alignment
+- `run_midas()` - for pretrained: inverts raw output, then applies median scale alignment
+- `run_midas_finetuned()` - for fine-tuned: uses raw output directly, no inversion or alignment
 
 ### 7.6 Sky degradation artifact
 
@@ -397,7 +391,7 @@ This doesn't affect the reported metrics since evaluation also masks out those s
 
 ### 8.1 Why ONNX
 
-A PyTorch \`.pth\` checkpoint requires PyTorch, the MiDaS source code, and custom loading code to run. An ONNX file is a self-contained universal format that only needs \`onnxruntime\` (around 50MB) to run anywhere, including C++, mobile, embedded systems, and any other frameworks. For robotics deployment on a Jetson or Raspberry Pi, removing the full PyTorch dependency is a practical win.
+A PyTorch `.pth` checkpoint requires PyTorch, the MiDaS source code, and custom loading code to run. An ONNX file is a self-contained universal format that only needs `onnxruntime` (around 50MB) to run anywhere, including C++, mobile, embedded systems, and any other frameworks. For robotics deployment on a Jetson or Raspberry Pi, removing the full PyTorch dependency is a practical win.
 
 ONNX export works by tracing the model - it runs it once with a dummy input and records every operation (e.g. attention, convolution, layer normalization, interpolation) while doing so. The dummy input values don't matter, only the shape (1, 3, 384, 384). The result is a computation graph saved to disk.
 
@@ -405,30 +399,30 @@ ONNX export works by tracing the model - it runs it once with a dummy input and 
 
 DPT-Large's ViT backbone computes the unflatten size dynamically from the input tensor shape:
 
-\`\`\`python
+```python
 h, w = x.shape[-2:]
 unflatten_size = [h // patch_size, w // patch_size]  # h and w are tensors, not ints
-\`\`\`
+```
 
 The ONNX tracer sees a tensor expression rather than a concrete integer. Even though the values are always 24 and 24 (384x384 input, patch_size=16), the tracer can't resolve this at export time and refuses to proceed. Working through the export required addressing three separate issues:
 
 - the new dynamo exporter (default in PyTorch 2.9+) failed on the unflatten operation
-- the old TorchScript exporter (\`dynamo=False\`) hit the same root cause
-- reloading the model on CPU still left some internal activation tensors on GPU since they're stored as non-parameters and don't move with \`.cpu()\`
+- the old TorchScript exporter (`dynamo=False`) hit the same root cause
+- reloading the model on CPU still left some internal activation tensors on GPU since they're stored as non-parameters and don't move with `.cpu()`
 
 A useful diagnostic was that an early export attempt appeared to succeed and produced a file, but it was only 1.8MB. DPT-Large should be around 1.4GB. Checking file size revealed the export had silently produced a degraded stub, so it's worth verifying output file size any time an ONNX export seems suspiciously fast.
 
 The fix required patching the MiDaS source file directly:
 
-\`\`\`python
+```python
 # in ~/.cache/torch/hub/intel-isl_MiDaS_master/midas/backbones/utils.py
 # changed:
 h // pretrained.model.patch_size[1]
 # to:
 int(h) // int(pretrained.model.patch_size[1])
-\`\`\`
+```
 
-\`int()\` forces Python to evaluate the tensor immediately and extract a concrete integer that ONNX can handle as a static shape. I then reloaded the model fresh with \`map_location='cpu'\` (never moving to GPU first) to ensure all internal tensors were on CPU from the start. The model cache was cleared manually through \`sys.modules\` to pick up the patched source without re-downloading, since re-downloading would overwrite the patch.
+`int()` forces Python to evaluate the tensor immediately and extract a concrete integer that ONNX can handle as a static shape. I then reloaded the model fresh with `map_location='cpu'` (never moving to GPU first) to ensure all internal tensors were on CPU from the start. The model cache was cleared manually through `sys.modules` to pick up the patched source without re-downloading, since re-downloading would overwrite the patch.
 
 The final successful export produced a 1367.7MB file - the correct size for DPT-Large.
 
@@ -436,13 +430,13 @@ The final successful export produced a 1367.7MB file - the correct size for DPT-
 
 After successful ONNX export, I quantized to INT8:
 
-\`\`\`python
+```python
 quantize_dynamic(
     "dpt_large_finetuned.onnx",
     "dpt_large_finetuned_int8.onnx",
     weight_type=QuantType.QInt8
 )
-\`\`\`
+```
 
 Dynamic quantization converts stored weights from 32-bit floats to 8-bit integers ahead of time, while activations are quantized at runtime. This is simpler than static quantization which requires a calibration dataset.
 
@@ -467,17 +461,17 @@ My implementation projects stereo depth to a top-down occupancy grid using the p
 
 For each pixel (u, v) with known depth Z, the real-world 3D position is:
 
-\`\`\`
+```
 X = (u - cx) * Z / f    - lateral position (left/right) in meters
 Y = (v - cy) * Z / f    - vertical position (up/down) in meters
 Z = depth               - forward distance in meters
-\`\`\`
+```
 
 Dividing by f converts pixel offset from the optical center to an angle, and multiplying by Z gives real-world distance. In KITTI's coordinate convention, Y is positive downward (pixel rows increase downward), so the road surface (camera mounted at ~1.65m above ground) has positive Y around +1.65, and sky has negative Y. For BEV I use only X (lateral) and Z (forward).
 
 ### 9.3 Grid construction
 
-\`\`\`python
+```python
 def depth_to_bev(depth, f, cx, cy, grid_res=0.2, x_range=(-25, 35), z_range=(3, 80)):
     valid = np.isfinite(depth) & (depth > 0)
     Z = depth[valid]
@@ -493,11 +487,11 @@ def depth_to_bev(depth, f, cx, cy, grid_res=0.2, x_range=(-25, 35), z_range=(3, 
     mask = (xi >= 0) & (xi < x_bins) & (zi >= 0) & (zi < z_bins)
     grid[zi[mask], xi[mask]] = 1
     return grid
-\`\`\`
+```
 
-The height filter \`(Y > -5) & (Y < 0.5)\` removes the road surface (Y ~+1.65, below camera) and sky (very negative Y), keeping obstacle-height points like cars, buildings, and poles. I set x_range and z_range based on printing actual 3D coordinate bounds from a test scene: X ran from -23.1 to 30.4m, and Z from 3.3 to 79.5m.
+The height filter `(Y > -5) & (Y < 0.5)` removes the road surface (Y ~+1.65, below camera) and sky (very negative Y), keeping obstacle-height points like cars, buildings, and poles. I set x_range and z_range based on printing actual 3D coordinate bounds from a test scene: X ran from -23.1 to 30.4m, and Z from 3.3 to 79.5m.
 
-Grid resolution of 0.2m per cell gave cleaner results than 0.1m as finer resolution amplified stereo depth errors into noise. After building the binary grid, \`binary_dilation(bev, iterations=2)\` expands each occupied region by 2 pixels in all directions, filling small gaps and making the map more readable.
+Grid resolution of 0.2m per cell gave cleaner results than 0.1m as finer resolution amplified stereo depth errors into noise. After building the binary grid, `binary_dilation(bev, iterations=2)` expands each occupied region by 2 pixels in all directions, filling small gaps and making the map more readable.
 
 I also tried building BEV from neural depth. Results were noticeably worse - neural depth after scale alignment isn't geometrically precise enough for accurate 3D projection, and the height filter doesn't separate ground from obstacles as cleanly because neural depth doesn't preserve real-world spatial distributions the way stereo geometry does.
 
@@ -553,7 +547,7 @@ Several directions would meaningfully improve on the work done for this project:
 
 **Stereo-neural fusion** would address both methods' weaknesses simultaneously. Stereo is accurate where it's valid but has many holes; neural depth is always dense but metrically imprecise. A confidence-weighted fusion - using stereo depth where it's valid and neural depth to fill holes - would produce a dense, roughly metric depth map. The stereo validity mask provides a natural confidence signal.
 
-**Real INT8 speedup** requires running on hardware with native INT8 support. Deploying the ONNX model on a Jetson with TensorRT using \`CUDAExecutionProvider\` would give the ~2x speedup that CPU inference couldn't deliver. Static quantization with a small KITTI calibration set would also give better accuracy than the dynamic quantization used here.
+**Real INT8 speedup** requires running on hardware with native INT8 support. Deploying the ONNX model on a Jetson with TensorRT using `CUDAExecutionProvider` would give the ~2x speedup that CPU inference couldn't deliver. Static quantization with a small KITTI calibration set would also give better accuracy than the dynamic quantization used here.
 
 **Temporal consistency for BEV** is important for real AV applications. The current BEV is computed frame-by-frame with no memory across frames. Fusing depth estimates with IMU odometry and projecting prior frames into the current frame would give a running accumulated occupancy map rather than a single-frame snapshot.
 
@@ -564,22 +558,3 @@ Several directions would meaningfully improve on the work done for this project:
 I used Weights and Biases to track training and log all evaluation results. During fine-tuning, I logged train loss, validation loss, validation AbsRel, and learning rate on each epoch. After evaluation, I retroactively logged all five methods as separate W&B runs with their full metric dictionaries, producing side-by-side comparison graphs in the dashboard.
 
 [W&B dashboard](https://wandb.ai/emlyqi-team/depth_benchmarking)
-`
-
-const DepthBenchmarking = () => {
-  return (
-    <div className="depth-benchmarking" style={{ margin: '4rem 0' }}>
-      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '2rem' }}>
-        ← back
-      </Link>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
-  )
-}
-
-export default DepthBenchmarking

@@ -166,54 +166,56 @@ a {
   text-decoration: underline;
 }
 
-.depth-benchmarking ul {
+.markdown ul {
   list-style-type: disc;
   padding-left: 1.5rem;
 }
 
-.depth-benchmarking a {
+.markdown a {
   text-decoration: underline;
 }
 
-.depth-benchmarking img {
+.markdown img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
   margin: 1rem 0;
 }
 
-.depth-benchmarking table {
+.markdown table {
   border-collapse: collapse;
   margin: 1rem 0;
   width: 100%;
 }
 
-.depth-benchmarking th,
-.depth-benchmarking td {
+.markdown th,
+.markdown td {
   border: 1px solid rgba(226, 226, 226, 0.3);
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
 
-.depth-benchmarking th {
+.markdown th {
   background: rgba(58, 63, 73, 0.3);
 }
 
-.depth-benchmarking code {
+.markdown code {
   background: rgba(58, 63, 73, 0.4);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
+  font-size: 1rem;
   font-size: 0.9em;
 }
 
-.depth-benchmarking pre {
+.markdown pre {
   background: rgba(58, 63, 73, 0.4);
   padding: 1rem;
   border-radius: 8px;
+  font-size: 1rem;
   overflow-x: auto;
 }
 
-.depth-benchmarking pre code {
+.markdown pre code {
   background: none;
   padding: 0;
 }

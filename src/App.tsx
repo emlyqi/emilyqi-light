@@ -4,7 +4,7 @@ import Navbar from './sections/Navbar.tsx'
 import About from './sections/About.tsx'
 import Projects from './sections/Projects.tsx'
 import Fun from './sections/Fun.tsx'
-import DepthBenchmarking from './project_pages/DepthBenchmarking.tsx'
+import ProjectPage from './components/ProjectPage.tsx'
 import Footer from './sections/Footer.tsx'
 
 function Home() {
@@ -38,7 +38,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/fun" element={<Fun />} />
-          <Route path="/depth_benchmarking" element={<DepthBenchmarking />} />
+          <Route path="/p/:slug" element={<ProjectPage />} />
         </Routes>
       </main>
       <Footer />

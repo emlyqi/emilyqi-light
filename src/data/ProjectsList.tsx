@@ -17,7 +17,7 @@ const ProjectsList = [
         skills: ['python', 'pytorch', 'opencv', 'hugging face', 'onnx', 'numpy'],
         description: 'benchmarked stereo vs neural depth estimation, fine-tuned dpt-large, and wrote 6000 words about it',
         image: DepthBenchmarkPath,
-        projectPage: '/depth_benchmarking'
+        projectPage: '/p/depth_benchmarking'
     },
     {
         type: 'software',
