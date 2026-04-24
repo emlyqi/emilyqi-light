@@ -8,6 +8,8 @@ import KaryonPath from '../assets/projects/karyon.png'
 import BreakoutDQNPath from '../assets/projects/breakout_dqn.png'
 import SynSpeedrunPath from '../assets/projects/syn_speedrun.png'
 import DepthBenchmarkPath from '../assets/projects/depth_benchmark.png'
+import AutoRoboNavPath from '../assets/projects/auto_robo_nav.png'
+import BiquadrisPath from '../assets/projects/biquadris.png'
 
 const ProjectsList = [
     {
@@ -18,6 +20,14 @@ const ProjectsList = [
         description: 'benchmarked stereo vs neural depth estimation, fine-tuned dpt-large, and wrote 6000 words about it',
         image: DepthBenchmarkPath,
         projectPage: '/p/depth_benchmarking'
+    },
+    {
+        type: 'software',
+        title: 'Autonomous Robot Navigation Stack',
+        link: 'https://github.com/emlyqi/auto-robot-nav',
+        skills: ['c++', 'ros 2', 'gazebo', 'docker', 'foxglove'],
+        description: <>maps world with lidar, plans paths with A*, and drives simulated robot to any clicked goal (for <a href="https://www.watonomous.ca/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>WATO</a> ASD)</>,
+        image: AutoRoboNavPath
     },
     {
         type: 'software',
@@ -59,6 +69,13 @@ const ProjectsList = [
         description: '50-person game of tag played on uWaterloo campus and in downtown Toronto',
         image: ConvergencePath,
         // projectPage: '../project_pages/Convergence'
+    },
+    {
+        type: 'software',
+        title: 'Biquadris',
+        skills: ['c++', 'object-oriented programming', 'x11'],
+        description: 'two-player tetris with some twists, built with many GoF design patterns',
+        image: BiquadrisPath
     },
     {
         type: 'software',

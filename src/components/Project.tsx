@@ -6,7 +6,7 @@ type Props = {
     title: string;
     link?: string;
     skills: string[];
-    description: string;
+    description: React.ReactNode;
     image?: string;
     projectPage?: string;
 }
