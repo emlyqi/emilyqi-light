@@ -15,6 +15,35 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Skill filter sizing */
+.skill-filter-dropdown {
+  font-size: 1rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.skill-filter-dropdown input {
+  font-size: inherit;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(226, 226, 226, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(226, 226, 226, 0.35);
+}
+
 body {
   margin: 0 auto;
 }
@@ -297,7 +326,7 @@ button {
   }
 
   .subtext {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   h1 {
@@ -320,6 +349,12 @@ button {
   .main-content li {
     width: 100% !important;
     padding: 0.5rem 0.25rem 1.25rem !important;
+  }
+
+  .skill-filter-dropdown li {
+    padding: 0.25rem 0.5rem !important;
+    line-height: 1.3 !important;
+    width: auto !important;
   }
 
   div[style*="outline: solid 1px #e2e2e2"] {
@@ -374,10 +409,26 @@ button {
     font-size: 0.8rem;
   }
 
+  .skill-filter {
+    flex-basis: 100%;
+  }
+
+  .skill-filter-dropdown {
+    font-size: 0.8rem;
+  }
+
   button {
     font-size: 0.8rem;
     padding: 0.4rem 0.75rem;
+    border-width: 1px;
   }
+
+  .skill-filter-dropdown li {
+    padding: 0.2rem 0.5rem !important;
+    line-height: 1.3 !important;
+    width: auto !important;
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -397,5 +448,11 @@ button {
 
   .projects-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .skill-filter-dropdown {
+    width: calc(100vw - 4rem) !important;
   }
 }

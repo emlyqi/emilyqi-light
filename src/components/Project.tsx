@@ -41,7 +41,7 @@ const Project = (props: Props) => {
     ? {
         transition: 'all 0.2s ease',
         cursor: 'pointer',
-        backgroundColor: 'rgba(58, 63, 73, 0.1)',
+        backgroundColor: 'rgba(20, 22, 25, 0.5)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
         transform: 'scale(1.02)',
