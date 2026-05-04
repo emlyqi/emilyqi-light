@@ -10,15 +10,25 @@ import SynSpeedrunPath from '../assets/projects/syn_speedrun.png'
 import DepthBenchmarkPath from '../assets/projects/depth_benchmark.png'
 import AutoRoboNavPath from '../assets/projects/auto_robo_nav.png'
 import BiquadrisPath from '../assets/projects/biquadris.png'
+import SlamPath from '../assets/projects/slam_from_scratch.png'
 
 const ProjectsList: { type: string; title: string; link?: string; skills: string[]; tags: string[]; description: React.ReactNode; image?: string; projectPage?: string }[] = [
+    {
+        type: 'software',
+        title: 'SLAM from Scratch',
+        link: 'https://github.com/emlyqi/slam-from-scratch',
+        skills: ['python', 'opencv', 'gtsam', 'scikit-learn'],
+        tags: ['robotics', 'cv'],
+        description: 'stereo visual odometry + loop closure + pose graph optimization on KITTI; IMU integration in progress',
+        image: SlamPath
+    },
     {
         type: 'software',
         title: 'Depth Estimation Benchmark',
         link: 'https://github.com/emlyqi/depth-benchmarking',
         skills: ['python', 'pytorch', 'opencv', 'hugging face', 'onnx', 'numpy'],
         tags: ['ml', 'cv'],
-        description: 'benchmarked stereo vs neural depth estimation, fine-tuned dpt-large, and wrote 6000 words about it',
+        description: 'benchmarked stereo vs neural depth estimation, fine-tuned DPT-Large, and wrote 6000 words about it',
         image: DepthBenchmarkPath,
         projectPage: '/p/depth_benchmarking'
     },

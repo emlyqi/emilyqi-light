@@ -23,7 +23,7 @@ const Projects = () => {
         ml: ['python', 'pytorch', 'scikit-learn', 'numpy', 'hugging face', 'openai', 'sentence-transformers', 'weights & biases', 'onnx', 'pandas', 'matplotlib'],
         cv: ['opencv', 'ultralytics yolo'],
         rl: ['deep rl'],
-        robotics: ['ros 2', 'gazebo', 'foxglove'],
+        robotics: ['ros 2', 'gazebo', 'foxglove', 'gtsam'],
         fullstack: ['django', 'react', 'fastapi', 'node.js', 'supabase', 'vercel', 'vite', 'typescript', 'tailwind css', 'framer motion'],
         whimsy: ['project management'],
     }
