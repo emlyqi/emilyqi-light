@@ -20,7 +20,8 @@ const ProjectsList: { type: string; title: string; link?: string; skills: string
         skills: ['python', 'opencv', 'gtsam', 'scikit-learn'],
         tags: ['robotics', 'cv'],
         description: 'stereo visual odometry + loop closure + pose graph optimization on KITTI; IMU integration in progress',
-        image: SlamPath
+        image: SlamPath,
+        projectPage: '/p/slam_from_scratch'
     },
     {
         type: 'software',
