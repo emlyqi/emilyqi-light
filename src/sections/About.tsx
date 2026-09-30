@@ -7,8 +7,8 @@ const About = () => {
       <h1 style={{ marginBottom: '0.5rem' }}>This past summer, I spent my</h1>
       <ul style={{marginTop: 0 }}>
         <li><b>days</b> studying CS @ uWaterloo</li>
-        <li><b>nights</b> tinkering with sensors, autonomous vehicles, and Raspberry Pis</li>
-        <li><b>weekends</b> taking photos of pretty people and places</li>
+        <li><b>nights</b> tinkering with sensors, autonomous vehicles, and cheap Raspberry Pis</li>
+        <li><b>weekends</b> filling up my camera roll with photos of pretty people and places</li>
       </ul>
 {/* <div style={{ marginTop: '3rem' }}>
         <GitHubCalendar
