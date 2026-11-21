@@ -3,7 +3,7 @@
 const About = () => {
   return (
     <div style={{ margin: '12rem 0' }}>
-      <p>Hey! I'm currently working on perception and mapping for autonomous planes @ <a href="https://flypyka.com/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>Pyka</a>.</p>
+      <p>Hey! I'm currently working on perception and embedded systems for autonomous planes @ <a href="https://flypyka.com/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>Pyka</a>.</p>
       <h1 style={{ marginBottom: '0.5rem' }}>This past summer, I spent my</h1>
       <ul style={{marginTop: 0 }}>
         <li><b>days</b> studying CS @ uWaterloo</li>
